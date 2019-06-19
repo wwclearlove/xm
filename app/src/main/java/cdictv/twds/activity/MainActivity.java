@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -93,14 +94,15 @@ public class MainActivity extends BaseActivity  {
                     djs.setText(time+"");
                     if(time==1){
                         webview.loadUrl("http://ming.cdivtc.edu.cn/view/index.html?id=" + mAndroidID);
-                        djs.setVisibility(View.GONE);
+                        djs.setVisibility(View.INVISIBLE);
                         time=180;
                     }
                 }else if(time==1){
 
                     time=180;
                 }else {
-                    djs.setVisibility(View.GONE);
+                    djs.setVisibility(View.INVISIBLE
+                    );
                 }
             }
             mHandler.postDelayed(this, 1000);
@@ -212,20 +214,26 @@ public class MainActivity extends BaseActivity  {
                     e.printStackTrace();
                 }
                 JsonBean.DataBean data = newsBean.data;
-                Log.d("json", "success: "+data.admin);
+                Log.d("json", "success: "+data.classX);
                 String[] words = data.time.split(" ");
 //                logoImg
-                Glide.with(MainActivity.this).load("http://ming.cdivtc.edu.cn"+data.logo)
-                        .placeholder(R.drawable.teachcontext).error(R.drawable.teachcontext)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
-                        .into(logoImg);
+                try {
+                    if(Util.isOnMainThread()){
+                        Glide.with(getApplicationContext()).load("http://ming.cdivtc.edu.cn"+data.logo)
+                                .placeholder(R.drawable.teachcontext).error(R.drawable.teachcontext)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)//关闭Glide的硬盘缓存机制
+                                .into(logoImg);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 addressname.setText(data.name+"");
                 adminname.setText("管理员:"+data.admin);
                 classTeach.setText("班级:"+data.classX+"\n教师:"+data.teacher);
                 teachNum.setText("教学内容:"+data.jiaoxueneirong+"\n实训人数:"+
                         data.count+"   应到:"+data.yingdao+"   实到:"+data.shidao);
                 timeClass.setText("   "+words[0]+" \n   "+words[1]+" "+data.jiechi);
-                dateStudent.setText(data.xuenian+" "+data.xueqi+" \n         "+data.zhouchi+"  "+data.xinqi);
+                dateStudent.setText(data.xuenian+" "+data.xueqi+" \n"+data.zhouchi+"  "+data.xinqi);
             }
 
             @Override
@@ -442,7 +450,7 @@ public class MainActivity extends BaseActivity  {
     void initListPopWindow(){
 
 
-     /*  List<MenuDataBean> dataList= Sputils.getDataList("menu",  MenuDataBean[].class);
+     /*  List<MenuDataBean> dataList= Sputils.getDataList("menu",  MenuDataBean[].clazz);
 
         try {
             for(MenuDataBean dataBean:dataList){

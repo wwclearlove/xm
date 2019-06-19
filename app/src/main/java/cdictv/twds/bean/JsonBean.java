@@ -3,6 +3,7 @@ package cdictv.twds.bean;
 import com.google.gson.annotations.SerializedName;
 
 public class JsonBean {
+
     /**
      * errcode : 200
      * errmsg : 成功
@@ -32,6 +33,7 @@ public class JsonBean {
          * zhouchi : 第15周
          * xinqi : 星期三
          */
+
         public String code;
         public String name;
         public String logo;
@@ -50,6 +52,4 @@ public class JsonBean {
         public String zhouchi;
         public String xinqi;
     }
-
-
 }
